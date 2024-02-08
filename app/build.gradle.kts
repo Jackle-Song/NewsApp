@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.mrsworkshop.newsapp"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.mrsworkshop.newsapp"
@@ -36,6 +36,16 @@ android {
 }
 
 dependencies {
+    //retorfit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.retrofit2:adapter-rxjava2:2.6.2")
+
+    //okhttp3
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
+
+    //gson
+    implementation ("com.google.code.gson:gson:2.9.1")
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

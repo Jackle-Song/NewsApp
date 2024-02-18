@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">NewsApp</string>
+
+    <!--Home Activity-->
+    <string name="home_activity_top_news_title">Top News</string>
+
+    <!--Home Activity - main category-->
+    <string-array name="HomeActivityMainCategory">
+        <item>Malaysia</item>
+        <item>China</item>
+    </string-array>
+
+    <!--Home Activity - sub category-->
+    <string-array name="HomeActivitySubCategory">
+        <item>business</item>
+        <item>entertainment</item>
+        <item>general</item>
+        <item>health</item>
+        <item>science</item>
+        <item>sports</item>
+        <item>technology</item>
+    </string-array>
+
+    <!--Home Activity - Language Bottom Sheet-->
+    <string name="language_dialog_select_language_title">Select Language</string>
+    <string name="language_dialog_english_title">English</string>
+    <string name="language_dialog_chinese_title">Chinese</string>
 </resources>

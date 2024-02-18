@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include
+        android:id="@+id/toolbarLanguageBottomSheet"
+        layout="@layout/toolbar_bottom_sheet_dialog"/>
+
+    <RelativeLayout
+        android:id="@+id/layoutEnglishLanguage"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtEnglishLanguage"
+            android:text="@string/language_dialog_english_title"
+            android:textSize="16sp"
+            android:textColor="@color/red_b6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/imgEnglishSelectedLanguage"
+            app:tint="@color/red_b6"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_checked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutChineseLanguage"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtChineseLanguage"
+            android:text="@string/language_dialog_chinese_title"
+            android:textSize="16sp"
+            android:textColor="@color/black_32"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/imgChineseSelectedLanguage"
+            app:tint="@color/red_b6"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_checked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

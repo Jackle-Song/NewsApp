@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NewsApp</string>
+
+    <!--Home Activity-->
+    <string name="home_activity_top_news_title">头条新闻</string>
+
+    <!--Home Activity - main category-->
+    <string-array name="HomeActivityMainCategory">
+        <item>马来西亚</item>
+        <item>中国</item>
+    </string-array>
+
+    <!--Home Activity - sub category-->
+    <string-array name="HomeActivitySubCategory">
+        <item>商业</item>
+        <item>娱乐</item>
+        <item>综合</item>
+        <item>健康</item>
+        <item>科学</item>
+        <item>体育</item>
+        <item>科技</item>
+    </string-array>
+
+    <!--Home Activity - Language Bottom Sheet-->
+    <string name="language_dialog_select_language_title">选择语言</string>
+    <string name="language_dialog_english_title">英文</string>
+    <string name="language_dialog_chinese_title">中文</string>
+</resources>

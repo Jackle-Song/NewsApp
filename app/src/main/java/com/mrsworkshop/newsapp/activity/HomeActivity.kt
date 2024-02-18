@@ -122,6 +122,25 @@ class HomeActivity : BaseActivity() {
         val txtChineseLanguage = languageBottomSheetDialog.findViewById<TextView>(R.id.txtChineseLanguage)
         val imgChineseSelectedLanguage = languageBottomSheetDialog.findViewById<ImageView>(R.id.imgChineseSelectedLanguage)
 
+        if (PreferenceCache(this).getSelectedLanguage() == CoreEnum.AppLanguageType.ENGLISH.languageType) {
+            txtEnglishLanguage?.setTextColor(ContextCompat.getColor(this, R.color.red_b6))
+            imgEnglishSelectedLanguage?.setColorFilter(ContextCompat.getColor(this, R.color.red_b6), PorterDuff.Mode.SRC_ATOP)
+            imgEnglishSelectedLanguage?.visibility = View.VISIBLE
+
+            txtChineseLanguage?.setTextColor(ContextCompat.getColor(this, R.color.black_32))
+            imgChineseSelectedLanguage?.setColorFilter(ContextCompat.getColor(this, R.color.black_32), PorterDuff.Mode.SRC_ATOP)
+            imgChineseSelectedLanguage?.visibility = View.GONE
+        }
+        else {
+            txtChineseLanguage?.setTextColor(ContextCompat.getColor(this, R.color.red_b6))
+            imgChineseSelectedLanguage?.setColorFilter(ContextCompat.getColor(this, R.color.red_b6), PorterDuff.Mode.SRC_ATOP)
+            imgChineseSelectedLanguage?.visibility = View.VISIBLE
+
+            txtEnglishLanguage?.setTextColor(ContextCompat.getColor(this, R.color.black_32))
+            imgEnglishSelectedLanguage?.setColorFilter(ContextCompat.getColor(this, R.color.black_32), PorterDuff.Mode.SRC_ATOP)
+            imgEnglishSelectedLanguage?.visibility = View.GONE
+        }
+
         toolbarTitle?.text = getString(R.string.language_dialog_select_language_title)
 
         imgCloseBtn?.setOnClickListener {

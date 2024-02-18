@@ -23,6 +23,10 @@ import com.mrsworkshop.newsapp.core.PreferenceCache
 import com.mrsworkshop.newsapp.databinding.ActivityHomeBinding
 import com.mrsworkshop.newsapp.helper.ContextWrapper
 import com.mrsworkshop.newsapp.viewModel.NewsApiData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,6 +38,9 @@ class HomeActivity : BaseActivity() {
 
     private var newsApiData : NewsApiData = NewsApiData()
     private var newsApiDetailsList : MutableList<ArticlesDetails>? = mutableListOf()
+
+    private var selectedCountry : String? = null
+    private var selectedSubCategory : String? = null
 
     override fun attachBaseContext(newBase: Context) {
         val lang = PreferenceCache(newBase).getSelectedLanguage()
@@ -76,6 +83,36 @@ class HomeActivity : BaseActivity() {
 
             txtCardViewCategory.text = mainCategoryItem
 
+            if (selectedCountry == null) {
+                if (index == CoreEnum.CountryCategory.MALAYSIA.index) {
+                    cardViewCategory.setCardBackgroundColor(ContextCompat.getColor(this, R.color.light_blue_41))
+                    selectedCountry = CoreEnum.CountryCategory.MALAYSIA.country
+                }
+            }
+
+            cardViewCategory.setOnClickListener {
+                for (i in mainCategoryList.indices) {
+                    val cardView = binding.layoutMainCategory.getChildAt(i).findViewById<CardView>(R.id.cardViewCategory)
+                    if (i == index) {
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.light_blue_41))
+                    }
+                    else {
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.white))
+                    }
+
+                    when (index) {
+                        CoreEnum.CountryCategory.MALAYSIA.index -> {
+                            selectedCountry = CoreEnum.CountryCategory.MALAYSIA.country
+                        }
+
+                        CoreEnum.CountryCategory.CHINA.index -> {
+                            selectedCountry = CoreEnum.CountryCategory.CHINA.country
+                        }
+                    }
+                }
+                getNewsApi()
+            }
+
             binding.layoutMainCategory.addView(mainCategoryItemView)
         }
 
@@ -87,9 +124,64 @@ class HomeActivity : BaseActivity() {
             val layoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val subCategoryItemView : View = layoutInflater.inflate(R.layout.item_sub_category_button_design, null)
 
+            val layoutSubCategory : LinearLayout = subCategoryItemView.findViewById(R.id.layoutSubCategory)
             val txtCardViewSubCategory : TextView = subCategoryItemView.findViewById(R.id.txtCardViewSubCategory)
+            val viewSelectedCategory : View = subCategoryItemView.findViewById(R.id.viewSelectedCategory)
+
+            if (selectedSubCategory == null || selectedSubCategory == CoreEnum.SubCategory.BUSINESS.category) {
+                if (index == CoreEnum.SubCategory.BUSINESS.index) {
+                    viewSelectedCategory.visibility = View.VISIBLE
+                    selectedSubCategory = CoreEnum.SubCategory.BUSINESS.category
+                }
+                else {
+                    viewSelectedCategory.visibility = View.INVISIBLE
+                }
+            }
 
             txtCardViewSubCategory.text = subCategoryItem
+
+            layoutSubCategory.setOnClickListener {
+                for (i in subCategoryList.indices) {
+                    val categoryView = binding.layoutSubCategory.getChildAt(i).findViewById<View>(R.id.viewSelectedCategory)
+                    if (i == index) {
+                        categoryView.visibility = View.VISIBLE
+                    }
+                    else {
+                        categoryView.visibility = View.INVISIBLE
+                    }
+
+                    when (index) {
+                        CoreEnum.SubCategory.BUSINESS.index -> {
+                            selectedSubCategory = CoreEnum.SubCategory.BUSINESS.category
+                        }
+
+                        CoreEnum.SubCategory.ENTERTAINMENT.index -> {
+                            selectedSubCategory = CoreEnum.SubCategory.ENTERTAINMENT.category
+                        }
+
+                        CoreEnum.SubCategory.GENERAL.index -> {
+                            selectedSubCategory = CoreEnum.SubCategory.GENERAL.category
+                        }
+
+                        CoreEnum.SubCategory.HEALTH.index -> {
+                            selectedSubCategory = CoreEnum.SubCategory.HEALTH.category
+                        }
+
+                        CoreEnum.SubCategory.SCIENCE.index -> {
+                            selectedSubCategory = CoreEnum.SubCategory.SCIENCE.category
+                        }
+
+                        CoreEnum.SubCategory.SPORTS.index -> {
+                            selectedSubCategory = CoreEnum.SubCategory.SPORTS.category
+                        }
+
+                        CoreEnum.SubCategory.TECHNOLOGY.index -> {
+                            selectedSubCategory = CoreEnum.SubCategory.TECHNOLOGY.category
+                        }
+                    }
+                }
+                getNewsApi()
+            }
 
             binding.layoutSubCategory.addView(subCategoryItemView)
         }
@@ -183,24 +275,27 @@ class HomeActivity : BaseActivity() {
      */
 
     private fun getNewsApi() {
-        val country = "my"
-        val category = "business"
+        newsApiDetailsList?.clear()
+        val country = selectedCountry
+        val category = selectedSubCategory
 
-        newsApiData.getTopHeadlines(country, category)?.enqueue(object :
-            Callback<NewsApiResponseDTO> {
-            override fun onResponse(call: Call<NewsApiResponseDTO>, response: Response<NewsApiResponseDTO>) {
-                if (response.isSuccessful) {
-                    val newsResponse = response.body()
-                    newsApiDetailsList = newsResponse?.articles
-                    newsDetailsAdapter.updateNewsDetailsList(newsApiDetailsList)
-                } else {
-                    // Handle unsuccessful response
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = newsApiData.getTopHeadlines(country ?: "", category ?: "")?.execute()
+                withContext(Dispatchers.Main) {
+                    if (response?.isSuccessful == true) {
+                        val newsResponse = response.body()
+                        newsApiDetailsList = newsResponse?.articles
+                        newsDetailsAdapter.updateNewsDetailsList(newsApiDetailsList)
+                    }
+                    else {
+                        // Handle unsuccessful response
+                    }
                 }
             }
-
-            override fun onFailure(call: Call<NewsApiResponseDTO>, t: Throwable) {
+            catch (e: Exception) {
                 // Handle network errors
             }
-        })
+        }
     }
 }

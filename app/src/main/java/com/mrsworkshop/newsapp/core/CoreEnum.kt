@@ -6,4 +6,19 @@ object CoreEnum {
         ENGLISH("en"),
         CHINESE("zh")
     }
+
+    enum class CountryCategory(val country: String, val index : Int) {
+        MALAYSIA("my", 0),
+        CHINA("cn", 1)
+    }
+
+    enum class SubCategory(val category: String, val index : Int) {
+        BUSINESS("business", 0),
+        ENTERTAINMENT("entertainment", 1),
+        GENERAL("general", 2),
+        HEALTH("health", 3),
+        SCIENCE("science", 4),
+        SPORTS("sports", 5),
+        TECHNOLOGY("technology", 6),
+    }
 }

@@ -1,6 +1,5 @@
 package com.mrsworkshop.newsapp.activity
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -12,16 +11,17 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.Gson
 import com.mrsworkshop.newsapp.R
 import com.mrsworkshop.newsapp.adapter.NewsDetailsAdapter
 import com.mrsworkshop.newsapp.apidata.response.ArticlesDetails
 import com.mrsworkshop.newsapp.apidata.response.NewsApiResponseDTO
+import com.mrsworkshop.newsapp.core.CoreEnum
+import com.mrsworkshop.newsapp.core.PreferenceCache
 import com.mrsworkshop.newsapp.databinding.ActivityHomeBinding
+import com.mrsworkshop.newsapp.helper.ContextWrapper
 import com.mrsworkshop.newsapp.viewModel.NewsApiData
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,9 +30,18 @@ import retrofit2.Response
 class HomeActivity : BaseActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var newsDetailsAdapter: NewsDetailsAdapter
+    private lateinit var oldPrefLocaleCode : String
 
     private var newsApiData : NewsApiData = NewsApiData()
     private var newsApiDetailsList : MutableList<ArticlesDetails>? = mutableListOf()
+
+    override fun attachBaseContext(newBase: Context) {
+        val lang = PreferenceCache(newBase).getSelectedLanguage()
+        oldPrefLocaleCode = lang
+
+        super.attachBaseContext(ContextWrapper.wrap(newBase, lang))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -46,6 +55,12 @@ class HomeActivity : BaseActivity() {
     /**
      * private function
      */
+
+    private fun recreateActivity() {
+        val currentLocaleCode = PreferenceCache(this).getSelectedLanguage()
+        recreate()
+        oldPrefLocaleCode = currentLocaleCode
+    }
 
     private fun initUI() {
         val mainCategoryList = resources.getStringArray(R.array.HomeActivityMainCategory).toMutableList()
@@ -121,6 +136,10 @@ class HomeActivity : BaseActivity() {
             txtChineseLanguage?.setTextColor(ContextCompat.getColor(this, R.color.black_32))
             imgChineseSelectedLanguage?.setColorFilter(ContextCompat.getColor(this, R.color.black_32), PorterDuff.Mode.SRC_ATOP)
             imgChineseSelectedLanguage?.visibility = View.GONE
+
+            PreferenceCache(this).setSelectedLanguage(CoreEnum.AppLanguageType.ENGLISH.languageType)
+            languageBottomSheetDialog.dismiss()
+            recreateActivity()
         }
 
         layoutChineseLanguage?.setOnClickListener {
@@ -131,6 +150,10 @@ class HomeActivity : BaseActivity() {
             txtEnglishLanguage?.setTextColor(ContextCompat.getColor(this, R.color.black_32))
             imgEnglishSelectedLanguage?.setColorFilter(ContextCompat.getColor(this, R.color.black_32), PorterDuff.Mode.SRC_ATOP)
             imgEnglishSelectedLanguage?.visibility = View.GONE
+
+            PreferenceCache(this).setSelectedLanguage(CoreEnum.AppLanguageType.CHINESE.languageType)
+            languageBottomSheetDialog.dismiss()
+            recreateActivity()
         }
 
         languageBottomSheetDialog.show()

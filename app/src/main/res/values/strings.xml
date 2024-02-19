@@ -3,6 +3,8 @@
 
     <!--Home Activity-->
     <string name="home_activity_top_news_title">Top News</string>
+    <string name="home_activity_save_search_text">Save Search</string>
+    <string name="home_activity_save_successfully_text">Save Successfully</string>
 
     <!--Home Activity - main category-->
     <string-array name="HomeActivityMainCategory">

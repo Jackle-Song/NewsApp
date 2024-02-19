@@ -1,67 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:background="@drawable/bg_gradient_dark"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.HomeActivity">
 
     <LinearLayout
-        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:text="@string/home_activity_top_news_title"
-            android:textSize="24sp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:layout_marginEnd="16dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/imgLanguageDialog"
-            app:tint="@color/white"
-            android:src="@drawable/ic_translate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:text="@string/home_activity_top_news_title"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:layout_marginEnd="16dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/imgLanguageDialog"
+                app:tint="@color/white"
+                android:src="@drawable/ic_translate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_marginVertical="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/layoutMainCategory"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollViewSubCategory"
+            android:layout_marginBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/layoutSubCategory"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </HorizontalScrollView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerviewNewsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
-    
-    <HorizontalScrollView
-        android:layout_marginVertical="16dp"
+
+    <RelativeLayout
+        android:background="@drawable/bg_gradient_transparent_black_down"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/layoutMainCategory"
-            android:orientation="horizontal"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardViewSaveSearch"
+            android:layout_centerHorizontal="true"
+            app:cardElevation="16dp"
+            app:cardBackgroundColor="@color/light_blue_41"
+            app:cardCornerRadius="32dp"
+            app:strokeColor="@color/light_blue_41"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
 
-    </HorizontalScrollView>
+            <LinearLayout
+                android:padding="12dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-    <HorizontalScrollView
-        android:layout_marginBottom="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+                <ImageView
+                    app:tint="@color/black_32"
+                    android:src="@drawable/ic_favourite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-        <LinearLayout
-            android:id="@+id/layoutSubCategory"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+                <TextView
+                    android:text="@string/home_activity_save_search_text"
+                    android:textColor="@color/black_32"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginStart="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-    </HorizontalScrollView>
+            </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerviewNewsList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        </com.google.android.material.card.MaterialCardView>
 
-</LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

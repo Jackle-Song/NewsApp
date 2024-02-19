@@ -6,10 +6,12 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +27,7 @@ import com.mrsworkshop.newsapp.databinding.ActivityHomeBinding
 import com.mrsworkshop.newsapp.helper.ContextWrapper
 import com.mrsworkshop.newsapp.utils.Constant
 import com.mrsworkshop.newsapp.viewModel.NewsApiData
+import com.mrsworkshop.newsapp.vo.NewsDetailsVO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,6 +39,7 @@ class HomeActivity : BaseActivity(), NewsDetailsAdapter.NewsDetailsInterface {
     private lateinit var oldPrefLocaleCode : String
 
     private var newsApiData : NewsApiData = NewsApiData()
+    private var newsDetailsVO : NewsDetailsVO = NewsDetailsVO()
     private var newsApiDetailsList : MutableList<ArticlesDetails>? = mutableListOf()
 
     private var selectedCountry : String? = null
@@ -52,6 +56,13 @@ class HomeActivity : BaseActivity(), NewsDetailsAdapter.NewsDetailsInterface {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val savedSearch = PreferenceCache(this).getSavedSearch()
+        if (savedSearch != null) {
+            newsDetailsVO = Gson().fromJson(savedSearch, NewsDetailsVO::class.java)
+            selectedCountry = newsDetailsVO.country
+            selectedSubCategory = newsDetailsVO.category
+        }
 
         initUI()
         setupComponentListener()
@@ -92,18 +103,37 @@ class HomeActivity : BaseActivity(), NewsDetailsAdapter.NewsDetailsInterface {
             if (selectedCountry == null) {
                 if (index == CoreEnum.CountryCategory.MALAYSIA.index) {
                     cardViewCategory.setCardBackgroundColor(ContextCompat.getColor(this, R.color.light_blue_41))
+                    txtCardViewCategory.setTextColor(ContextCompat.getColor(this, R.color.grey_55))
                     selectedCountry = CoreEnum.CountryCategory.MALAYSIA.country
+                }
+            }
+            else {
+                when (val selectedCountryEnum = CoreEnum.CountryCategory.values().find { it.country == selectedCountry }) {
+                    CoreEnum.CountryCategory.MALAYSIA,
+                    CoreEnum.CountryCategory.CHINA -> {
+                        if (index == selectedCountryEnum.index) {
+                            cardViewCategory.setCardBackgroundColor(ContextCompat.getColor(this, R.color.light_blue_41))
+                            txtCardViewCategory.setTextColor(ContextCompat.getColor(this, R.color.grey_55))
+                        }
+                    }
+                    else -> {
+                        cardViewCategory.setCardBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
+                        txtCardViewCategory.setTextColor(ContextCompat.getColor(this, R.color.white))
+                    }
                 }
             }
 
             cardViewCategory.setOnClickListener {
                 for (i in mainCategoryList.indices) {
                     val cardView = binding.layoutMainCategory.getChildAt(i).findViewById<CardView>(R.id.cardViewCategory)
+                    val textView = binding.layoutMainCategory.getChildAt(i).findViewById<TextView>(R.id.txtCardViewCategory)
                     if (i == index) {
                         cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.light_blue_41))
+                        textView.setTextColor(ContextCompat.getColor(this, R.color.grey_55))
                     }
                     else {
-                        cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.white))
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
+                        textView.setTextColor(ContextCompat.getColor(this, R.color.white))
                     }
 
                     when (index) {
@@ -142,6 +172,10 @@ class HomeActivity : BaseActivity(), NewsDetailsAdapter.NewsDetailsInterface {
                 else {
                     viewSelectedCategory.visibility = View.INVISIBLE
                 }
+            }
+            else {
+                val selectedCategoryEnum = CoreEnum.SubCategory.values().find { it.category == selectedSubCategory }
+                viewSelectedCategory.visibility = if (index == selectedCategoryEnum?.index) View.VISIBLE else View.INVISIBLE
             }
 
             txtCardViewSubCategory.text = subCategoryItem
@@ -202,6 +236,32 @@ class HomeActivity : BaseActivity(), NewsDetailsAdapter.NewsDetailsInterface {
         binding.imgLanguageDialog.setOnClickListener {
             showLanguageBottomSheetDialog()
         }
+
+        binding.cardViewSaveSearch.setOnClickListener {
+            newsDetailsVO.country = selectedCountry
+            newsDetailsVO.category = selectedSubCategory
+            val savedCountryCategory = Gson().toJson(newsDetailsVO)
+            PreferenceCache(this).savedSearch(savedCountryCategory)
+            Toast.makeText(this@HomeActivity, getString(R.string.home_activity_save_successfully_text), Toast.LENGTH_LONG).show()
+        }
+
+        binding.horizontalScrollViewSubCategory.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                val selectedCategoryEnum = CoreEnum.SubCategory.values().find { it.category == selectedSubCategory }
+                val childView = binding.layoutSubCategory.getChildAt(selectedCategoryEnum?.index ?: 0)
+                val childWidth = childView.width
+
+                val scrollPosition = selectedCategoryEnum?.index?.times(childWidth)
+
+                binding.horizontalScrollViewSubCategory.post {
+                    if (scrollPosition != null) {
+                        binding.horizontalScrollViewSubCategory.smoothScrollTo(scrollPosition, 0)
+                    }
+                }
+
+                binding.horizontalScrollViewSubCategory.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        })
     }
 
     private fun showLanguageBottomSheetDialog() {
@@ -283,12 +343,12 @@ class HomeActivity : BaseActivity(), NewsDetailsAdapter.NewsDetailsInterface {
     private fun getNewsApi() {
         showLoadingViewDialog()
         newsApiDetailsList?.clear()
-        val country = selectedCountry
-        val category = selectedSubCategory
+        newsDetailsVO.country = selectedCountry
+        newsDetailsVO.category = selectedSubCategory
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = newsApiData.getTopHeadlines(country ?: "", category ?: "")?.execute()
+                val response = newsApiData.getTopHeadlines(newsDetailsVO.country ?: "", newsDetailsVO.category ?: "")?.execute()
                 withContext(Dispatchers.Main) {
                     if (response?.isSuccessful == true) {
                         val newsResponse = response.body()

@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.mrsworkshop.newsapp.apidata.response.ArticlesDetails
 
 const val PREFERENCE_NAME = "SharedPreferenceNewsApp"
 const val PREFERENCE_LANGUAGE = "Language"
+const val PREFERENCE_COUNTRY_CATEGORY = "CountryCategory"
 
 class PreferenceCache(context : Context) {
 
@@ -33,6 +35,16 @@ class PreferenceCache(context : Context) {
     fun setSelectedLanguage(language:String) {
         val editor = preference.edit()
         editor.putString(PREFERENCE_LANGUAGE, language)
+        editor.apply()
+    }
+
+    fun getSavedSearch() : String? {
+        return preference.getString(PREFERENCE_COUNTRY_CATEGORY, null)
+    }
+
+    fun savedSearch(savedCountryCategory : String) {
+        val editor = preference.edit()
+        editor.putString(PREFERENCE_COUNTRY_CATEGORY, savedCountryCategory)
         editor.apply()
     }
 }

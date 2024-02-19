@@ -51,14 +51,12 @@ class NewsDetailsAdapter(
             Glide.with(mContext)
                 .load(newsDetailsItem?.urlToImage)
                 .placeholder(R.drawable.img_breaking_news)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(newsDetailsViewHolder.imgNewsContent)
         }
         else {
             Glide.with(mContext)
                 .load(R.drawable.img_breaking_news)
                 .placeholder(R.drawable.img_breaking_news)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(newsDetailsViewHolder.imgNewsContent)
         }
 

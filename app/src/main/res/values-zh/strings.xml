@@ -4,6 +4,8 @@
 
     <!--Home Activity-->
     <string name="home_activity_top_news_title">头条新闻</string>
+    <string name="home_activity_save_search_text">保存搜索</string>
+    <string name="home_activity_save_successfully_text">保存成功</string>
 
     <!--Home Activity - main category-->
     <string-array name="HomeActivityMainCategory">

@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
     implementation ("androidx.security:security-crypto:1.1.0-alpha06")
 
     //glide

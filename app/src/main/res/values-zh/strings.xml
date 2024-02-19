@@ -26,4 +26,7 @@
     <string name="language_dialog_select_language_title">选择语言</string>
     <string name="language_dialog_english_title">英文</string>
     <string name="language_dialog_chinese_title">中文</string>
+
+    <!--News Details Activity-->
+    <string name="news_details_activity_view_more_details_text">查看全文</string>
 </resources>

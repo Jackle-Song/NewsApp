@@ -12,10 +12,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.NewsApp"
         tools:targetApi="31">
+        <activity android:name=".activity.NewsDetailsActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.WebViewActivity"
+            android:exported="true" />
         <activity
             android:name=".activity.HomeActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

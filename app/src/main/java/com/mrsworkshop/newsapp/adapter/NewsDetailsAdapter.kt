@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
@@ -18,9 +19,16 @@ import com.mrsworkshop.newsapp.apidata.response.ArticlesDetails
 class NewsDetailsAdapter(
     private var mContext : Context,
     private var newsDetailsList : MutableList<ArticlesDetails>? = mutableListOf(),
+    private var mListener : NewsDetailsInterface,
 ) : RecyclerView.Adapter<ViewHolder>() {
 
+    interface NewsDetailsInterface {
+        fun onViewNewsDetails(articlesDetails: ArticlesDetails)
+    }
+
+
     class NewsDetailsViewHolder(itemView : View) : ViewHolder(itemView) {
+        val cardViewNewsDetails : CardView = itemView.findViewById(R.id.cardViewNewsDetails)
         val imgNewsContent : ImageView = itemView.findViewById(R.id.imgNewsContent)
         val txtNewsTitle : TextView = itemView.findViewById(R.id.txtNewsTitle)
         val txtNewsAuthor : TextView = itemView.findViewById(R.id.txtNewsAuthor)
@@ -63,6 +71,12 @@ class NewsDetailsAdapter(
 
         if (!newsDetailsItem?.title.isNullOrEmpty()) {
             newsDetailsViewHolder.txtNewsTitle.text = newsDetailsItem?.title
+        }
+
+        newsDetailsViewHolder.cardViewNewsDetails.setOnClickListener {
+            if (newsDetailsItem != null) {
+                mListener.onViewNewsDetails(newsDetailsItem)
+            }
         }
 
         (mContext as BaseActivity).dismissLoadingViewDialog()

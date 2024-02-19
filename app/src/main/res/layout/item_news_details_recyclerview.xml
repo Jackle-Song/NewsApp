@@ -8,9 +8,11 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardViewNewsDetails"
         app:strokeColor="@color/transparent"
         app:cardElevation="5dp"
         app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="8dp"
         android:layout_margin="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

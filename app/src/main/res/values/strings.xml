@@ -25,4 +25,7 @@
     <string name="language_dialog_select_language_title">Select Language</string>
     <string name="language_dialog_english_title">English</string>
     <string name="language_dialog_chinese_title">Chinese</string>
+
+    <!--News Details Activity-->
+    <string name="news_details_activity_view_more_details_text">Read More</string>
 </resources>

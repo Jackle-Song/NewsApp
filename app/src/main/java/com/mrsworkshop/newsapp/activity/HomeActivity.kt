@@ -1,6 +1,7 @@
 package com.mrsworkshop.newsapp.activity
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.Gson
 import com.mrsworkshop.newsapp.R
 import com.mrsworkshop.newsapp.adapter.NewsDetailsAdapter
 import com.mrsworkshop.newsapp.apidata.response.ArticlesDetails
@@ -21,13 +23,14 @@ import com.mrsworkshop.newsapp.core.CoreEnum
 import com.mrsworkshop.newsapp.core.PreferenceCache
 import com.mrsworkshop.newsapp.databinding.ActivityHomeBinding
 import com.mrsworkshop.newsapp.helper.ContextWrapper
+import com.mrsworkshop.newsapp.utils.Constant
 import com.mrsworkshop.newsapp.viewModel.NewsApiData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HomeActivity : BaseActivity() {
+class HomeActivity : BaseActivity(), NewsDetailsAdapter.NewsDetailsInterface {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var newsDetailsAdapter: NewsDetailsAdapter
     private lateinit var oldPrefLocaleCode : String
@@ -53,6 +56,13 @@ class HomeActivity : BaseActivity() {
         initUI()
         setupComponentListener()
         getNewsApi()
+    }
+
+    override fun onViewNewsDetails(articlesDetails: ArticlesDetails) {
+        val articlesDetailsJson = Gson().toJson(articlesDetails)
+        val intent = Intent(this, NewsDetailsActivity::class.java)
+        intent.putExtra(Constant.INTENT_NEWS_DETAILS_JSON, articlesDetailsJson)
+        startActivity(intent)
     }
 
     /**
@@ -182,7 +192,7 @@ class HomeActivity : BaseActivity() {
             binding.layoutSubCategory.addView(subCategoryItemView)
         }
 
-        newsDetailsAdapter = NewsDetailsAdapter(this@HomeActivity, newsApiDetailsList)
+        newsDetailsAdapter = NewsDetailsAdapter(this@HomeActivity, newsApiDetailsList, this@HomeActivity)
         binding.recyclerviewNewsList.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
         binding.recyclerviewNewsList.adapter = newsDetailsAdapter
 

@@ -4,4 +4,8 @@
         <item name="android:statusBarColor">@color/black_32</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
+
+    <style name="ContentLoadingProgress" parent="Base.Theme.NewsApp">
+        <item name="colorAccent">@color/light_grey_dc</item>
+    </style>
 </resources>

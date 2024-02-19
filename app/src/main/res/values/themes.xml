@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.NewsApp" parent="Base.Theme.NewsApp" />
+
+    <style name="ContentLoadingProgress" parent="Base.Theme.NewsApp">
+        <item name="colorAccent">@color/light_grey_dc</item>
+    </style>
 </resources>

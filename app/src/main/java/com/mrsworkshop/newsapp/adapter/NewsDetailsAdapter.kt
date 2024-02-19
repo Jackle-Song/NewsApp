@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.mrsworkshop.newsapp.R
+import com.mrsworkshop.newsapp.activity.BaseActivity
 import com.mrsworkshop.newsapp.apidata.response.ArticlesDetails
 
 class NewsDetailsAdapter(
@@ -63,6 +64,8 @@ class NewsDetailsAdapter(
         if (!newsDetailsItem?.title.isNullOrEmpty()) {
             newsDetailsViewHolder.txtNewsTitle.text = newsDetailsItem?.title
         }
+
+        (mContext as BaseActivity).dismissLoadingViewDialog()
     }
 
     @SuppressLint("NotifyDataSetChanged")

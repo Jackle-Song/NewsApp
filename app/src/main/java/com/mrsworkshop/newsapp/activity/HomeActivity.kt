@@ -17,7 +17,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mrsworkshop.newsapp.R
 import com.mrsworkshop.newsapp.adapter.NewsDetailsAdapter
 import com.mrsworkshop.newsapp.apidata.response.ArticlesDetails
-import com.mrsworkshop.newsapp.apidata.response.NewsApiResponseDTO
 import com.mrsworkshop.newsapp.core.CoreEnum
 import com.mrsworkshop.newsapp.core.PreferenceCache
 import com.mrsworkshop.newsapp.databinding.ActivityHomeBinding
@@ -27,9 +26,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class HomeActivity : BaseActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -275,6 +271,7 @@ class HomeActivity : BaseActivity() {
      */
 
     private fun getNewsApi() {
+        showLoadingViewDialog()
         newsApiDetailsList?.clear()
         val country = selectedCountry
         val category = selectedSubCategory

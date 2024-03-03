@@ -36,7 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HomeActivity : BaseActivity() {
+class HomeActivity : BaseActivity(), TopHeadlinesFragment.TopHeadlinesInterface {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var oldPrefLocaleCode : String
 
@@ -55,6 +55,10 @@ class HomeActivity : BaseActivity() {
 
         loadFragment(TopHeadlinesFragment())
         setupComponentListener()
+    }
+
+    override fun mainRecreateActivity() {
+        recreateActivity()
     }
 
     /**

@@ -37,7 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TopHeadlinesFragment : Fragment(), NewsDetailsAdapter.NewsDetailsInterface {
+class TopHeadlinesFragment : BaseFragment(), NewsDetailsAdapter.NewsDetailsInterface {
     private lateinit var binding: FragmentTopNewsBinding
     private lateinit var newsDetailsAdapter: NewsDetailsAdapter
 
@@ -47,6 +47,21 @@ class TopHeadlinesFragment : Fragment(), NewsDetailsAdapter.NewsDetailsInterface
 
     private var selectedCountry : String? = null
     private var selectedSubCategory : String? = null
+
+    private var mListener : TopHeadlinesInterface? = null
+
+    interface TopHeadlinesInterface {
+        fun mainRecreateActivity()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is TopHeadlinesInterface) {
+            mListener = context
+        } else {
+            throw RuntimeException("$context must implement TopHeadlinesInterface")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -311,7 +326,7 @@ class TopHeadlinesFragment : Fragment(), NewsDetailsAdapter.NewsDetailsInterface
 
             PreferenceCache(requireContext()).setSelectedLanguage(CoreEnum.AppLanguageType.ENGLISH.languageType)
             languageBottomSheetDialog.dismiss()
-//            recreateActivity()
+            mListener?.mainRecreateActivity()
         }
 
         layoutChineseLanguage?.setOnClickListener {
@@ -325,7 +340,7 @@ class TopHeadlinesFragment : Fragment(), NewsDetailsAdapter.NewsDetailsInterface
 
             PreferenceCache(requireContext()).setSelectedLanguage(CoreEnum.AppLanguageType.CHINESE.languageType)
             languageBottomSheetDialog.dismiss()
-//            recreateActivity()
+            mListener?.mainRecreateActivity()
         }
 
         languageBottomSheetDialog.show()
@@ -336,7 +351,7 @@ class TopHeadlinesFragment : Fragment(), NewsDetailsAdapter.NewsDetailsInterface
      */
 
     private fun getNewsApi() {
-        (activity as BaseActivity).showLoadingViewDialog()
+        showLoadingViewDialog()
         newsApiDetailsList?.clear()
         newsDetailsVO.country = selectedCountry
         newsDetailsVO.category = selectedSubCategory
@@ -349,14 +364,17 @@ class TopHeadlinesFragment : Fragment(), NewsDetailsAdapter.NewsDetailsInterface
                         val newsResponse = response.body()
                         newsApiDetailsList = newsResponse?.articles
                         newsDetailsAdapter.updateNewsDetailsList(newsApiDetailsList)
+                        dismissLoadingViewDialog()
                     }
                     else {
                         // Handle unsuccessful response
+                        dismissLoadingViewDialog()
                     }
                 }
             }
             catch (e: Exception) {
                 // Handle network errors
+                dismissLoadingViewDialog()
             }
         }
     }

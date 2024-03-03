@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.mrsworkshop.newsapp.R
 import com.mrsworkshop.newsapp.activity.BaseActivity
 import com.mrsworkshop.newsapp.apidata.response.ArticlesDetails
+import com.mrsworkshop.newsapp.fragment.BaseFragment
 
 class NewsDetailsAdapter(
     private var mContext : Context,
@@ -25,7 +26,6 @@ class NewsDetailsAdapter(
     interface NewsDetailsInterface {
         fun onViewNewsDetails(articlesDetails: ArticlesDetails)
     }
-
 
     class NewsDetailsViewHolder(itemView : View) : ViewHolder(itemView) {
         val cardViewNewsDetails : CardView = itemView.findViewById(R.id.cardViewNewsDetails)
@@ -76,8 +76,6 @@ class NewsDetailsAdapter(
                 mListener.onViewNewsDetails(newsDetailsItem)
             }
         }
-
-        (mContext as BaseActivity).dismissLoadingViewDialog()
     }
 
     @SuppressLint("NotifyDataSetChanged")

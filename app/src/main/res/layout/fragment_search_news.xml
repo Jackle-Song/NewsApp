@@ -1,11 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutSearchFragment"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.search.SearchView
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@drawable/bg_button_search_view"
+            android:elevation="5dp"
+            android:layout_margin="16dp"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/ic_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null" />
+
+            <EditText
+                android:id="@+id/etSearchEditText"
+                android:textColor="@color/black_32"
+                android:textSize="16sp"
+                android:hint="@string/search_new_fragment_search_title"
+                android:textColorHint="@color/grey_55"
+                android:layout_marginHorizontal="8dp"
+                android:background="@color/transparent"
+                android:inputType="text"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                tools:ignore="NestedWeights"
+                android:autofillHints="@null" />
+
+            <ImageView
+                android:id="@+id/imgSpeechToText"
+                android:src="@drawable/ic_speech"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtSearchText"
+            android:text="@string/search_new_fragment_search_title"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginEnd="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtSearchHistoryTitle"
+        android:text="@string/search_new_fragment_search_news_history_title"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_margin="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/layoutSearchHistory"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerviewSearchResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
 </LinearLayout>

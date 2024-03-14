@@ -9,6 +9,7 @@ import com.mrsworkshop.newsapp.apidata.response.ArticlesDetails
 const val PREFERENCE_NAME = "SharedPreferenceNewsApp"
 const val PREFERENCE_LANGUAGE = "Language"
 const val PREFERENCE_COUNTRY_CATEGORY = "CountryCategory"
+const val PREFERENCE_SAVED_HISTORY = "SaveHistory"
 
 class PreferenceCache(context : Context) {
 
@@ -45,6 +46,16 @@ class PreferenceCache(context : Context) {
     fun savedSearch(savedCountryCategory : String) {
         val editor = preference.edit()
         editor.putString(PREFERENCE_COUNTRY_CATEGORY, savedCountryCategory)
+        editor.apply()
+    }
+
+    fun getSearchHistory() : String? {
+        return preference.getString(PREFERENCE_SAVED_HISTORY, null)
+    }
+
+    fun savedSearchHistory(savedHistory : String) {
+        val editor = preference.edit()
+        editor.putString(PREFERENCE_SAVED_HISTORY, savedHistory)
         editor.apply()
     }
 }

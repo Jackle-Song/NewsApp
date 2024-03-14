@@ -26,6 +26,7 @@ import com.mrsworkshop.newsapp.apidata.response.ArticlesDetails
 import com.mrsworkshop.newsapp.core.CoreEnum
 import com.mrsworkshop.newsapp.core.PreferenceCache
 import com.mrsworkshop.newsapp.databinding.ActivityHomeBinding
+import com.mrsworkshop.newsapp.fragment.SearchHistoryFragment
 import com.mrsworkshop.newsapp.fragment.TopHeadlinesFragment
 import com.mrsworkshop.newsapp.helper.ContextWrapper
 import com.mrsworkshop.newsapp.utils.Constant
@@ -39,7 +40,6 @@ import kotlinx.coroutines.withContext
 class HomeActivity : BaseActivity(), TopHeadlinesFragment.TopHeadlinesInterface {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var oldPrefLocaleCode : String
-
 
     override fun attachBaseContext(newBase: Context) {
         val lang = PreferenceCache(newBase).getSelectedLanguage()
@@ -70,6 +70,9 @@ class HomeActivity : BaseActivity(), TopHeadlinesFragment.TopHeadlinesInterface 
             when (item.itemId) {
                 R.id.top_headlines -> {
                     loadFragment(TopHeadlinesFragment())
+                }
+                R.id.search -> {
+                    loadFragment(SearchHistoryFragment())
                 }
             }
             true

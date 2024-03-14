@@ -31,4 +31,10 @@
 
     <!--News Details Activity-->
     <string name="news_details_activity_view_more_details_text">Read More</string>
+
+    <!--Search News Fragment-->
+    <string name="search_new_fragment_search_news_text">Search News</string>
+    <string name="search_new_fragment_search_news_history_title">Search History</string>
+    <string name="search_new_fragment_search_title">Search</string>
+
 </resources>

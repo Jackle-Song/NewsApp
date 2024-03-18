@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mrsworkshop.newsapp.apidata.response.ArticlesDetails
 
 const val PREFERENCE_NAME = "SharedPreferenceNewsApp"
@@ -48,9 +50,9 @@ class PreferenceCache(context : Context) {
         editor.putString(PREFERENCE_COUNTRY_CATEGORY, savedCountryCategory)
         editor.apply()
     }
-
-    fun getSearchHistory() : String? {
-        return preference.getString(PREFERENCE_SAVED_HISTORY, null)
+    fun getSearchHistory(): MutableList<String>? {
+        val json = preference.getString(PREFERENCE_SAVED_HISTORY, null)
+        return Gson().fromJson(json, object : TypeToken<MutableList<String>>() {}.type)
     }
 
     fun savedSearchHistory(savedHistory : String) {

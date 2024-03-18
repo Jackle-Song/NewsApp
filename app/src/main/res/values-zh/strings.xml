@@ -37,5 +37,6 @@
     <string name="search_new_fragment_search_news_text">搜索新闻</string>
     <string name="search_new_fragment_search_news_history_title">搜索历史</string>
     <string name="search_new_fragment_search_title">搜索</string>
+    <string name="search_new_fragment_clear_history_title">清除</string>
 
 </resources>

@@ -12,4 +12,10 @@ interface ApiInterface {
         @Query("category") category: String?,
         @Query("apiKey") apiKey: String?
     ): Call<NewsApiResponseDTO>?
+
+    @GET("everything")
+    fun getRelevantNews(
+        @Query("q") query: String?,
+        @Query("apiKey") apiKey: String?
+    ): Call<NewsApiResponseDTO>?
 }

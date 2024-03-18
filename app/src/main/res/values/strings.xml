@@ -36,5 +36,6 @@
     <string name="search_new_fragment_search_news_text">Search News</string>
     <string name="search_new_fragment_search_news_history_title">Search History</string>
     <string name="search_new_fragment_search_title">Search</string>
+    <string name="search_new_fragment_clear_history_title">Clear</string>
 
 </resources>

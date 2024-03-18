@@ -138,7 +138,8 @@
                     app:tint="@color/black_32"
                     android:src="@drawable/ic_favourite"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null" />
 
                 <TextView
                     android:text="@string/home_activity_save_search_text"

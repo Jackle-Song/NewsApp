@@ -20,4 +20,8 @@ class NewsApiData {
     fun getTopHeadlines(country: String, category: String): Call<NewsApiResponseDTO>? {
         return apiInterface?.getTopHeadlines(country, category, Constant.API_KEY)
     }
+
+    fun getRelevantNews(query : String): Call<NewsApiResponseDTO>? {
+        return apiInterface?.getRelevantNews(query, Constant.API_KEY)
+    }
 }

@@ -76,8 +76,7 @@
             android:orientation="horizontal"
             android:layout_margin="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/txtSearchHistoryTitle"
@@ -106,8 +105,7 @@
             app:flexDirection="row"
             android:padding="8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:layout_height="wrap_content" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerviewSearchResults"

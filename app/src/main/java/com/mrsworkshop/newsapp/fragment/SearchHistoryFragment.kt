@@ -94,6 +94,10 @@ class SearchHistoryFragment : BaseFragment(), NewsDetailsAdapter.NewsDetailsInte
 
         binding.etSearchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
+                val searchText = binding.etSearchEditText.text.toString().trim()
+                if (searchText.isNotEmpty()) {
+                    binding.txtSearchText.visibility = View.VISIBLE
+                }
                 binding.layoutSearchHistory.visibility = View.VISIBLE
                 binding.layoutSearchHistoryWrapper.visibility = View.VISIBLE
                 binding.recyclerviewSearchResults.visibility = View.GONE

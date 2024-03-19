@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.gson.Gson
 import com.mrsworkshop.newsapp.R
@@ -33,6 +34,9 @@ class SearchHistoryFragment : BaseFragment(), NewsDetailsAdapter.NewsDetailsInte
     private var newsApiData : NewsApiData = NewsApiData()
     private var searchHistoryList : MutableList<String>? = mutableListOf()
     private var newsApiDetailsList : MutableList<ArticlesDetails>? = mutableListOf()
+
+    private var pageSize : Int? = 20
+    private var page : Int? = 1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,6 +69,28 @@ class SearchHistoryFragment : BaseFragment(), NewsDetailsAdapter.NewsDetailsInte
         newsDetailsAdapter = NewsDetailsAdapter(requireContext(), newsApiDetailsList, this@SearchHistoryFragment)
         binding.recyclerviewSearchResults.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
         binding.recyclerviewSearchResults.adapter = newsDetailsAdapter
+
+        val onScrollListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as StaggeredGridLayoutManager
+                val totalItemCount = layoutManager.itemCount
+                val lastVisibleItemPositions = layoutManager.findLastVisibleItemPositions(null)
+
+                // Find the maximum position among the last visible items
+                val lastVisibleItemPosition = lastVisibleItemPositions.maxOrNull() ?: 0
+
+                // Check if the last visible item position is close to the total item count
+                val loadThreshold = 1 // Adjust this threshold as needed
+                if (totalItemCount - lastVisibleItemPosition <= loadThreshold) {
+                    page = page?.plus(1)
+                    getRelevantNews(binding.etSearchEditText.text.toString().trim(), pageSize ?: 0, page ?: 1, true)
+                }
+            }
+        }
+
+        binding.recyclerviewSearchResults.addOnScrollListener(onScrollListener)
     }
 
     private fun setupComponentListener() {
@@ -123,7 +149,8 @@ class SearchHistoryFragment : BaseFragment(), NewsDetailsAdapter.NewsDetailsInte
                 PreferenceCache(requireContext()).savedSearchHistory(Gson().toJson(searchHistoryList))
                 loadSearchHistory()
 
-                getRelevantNews(searchText)
+                page = 1
+                getRelevantNews(searchText, pageSize ?: 0, page ?: 0, false)
             }
         }
 
@@ -158,7 +185,13 @@ class SearchHistoryFragment : BaseFragment(), NewsDetailsAdapter.NewsDetailsInte
                     binding.etSearchEditText.clearFocus()
                     dismissKeyBoard()
 
-                    getRelevantNews(searchHistoryItem)
+                    binding.txtSearchText.visibility = View.GONE
+                    binding.layoutSearchHistory.visibility = View.GONE
+                    binding.layoutSearchHistoryWrapper.visibility = View.GONE
+                    binding.recyclerviewSearchResults.visibility = View.VISIBLE
+
+                    page = 1
+                    getRelevantNews(searchHistoryItem, pageSize ?: 0, page ?: 1, false)
                 }
 
                 binding.layoutSearchHistory.addView(searchHistoryLayoutView)
@@ -170,18 +203,24 @@ class SearchHistoryFragment : BaseFragment(), NewsDetailsAdapter.NewsDetailsInte
      * api service
      */
 
-    private fun getRelevantNews(query : String) {
-        showLoadingViewDialog()
-        newsApiDetailsList?.clear()
+    private fun getRelevantNews(query : String, pageSize : Int, page : Int, pageLoad : Boolean) {
+        if (!pageLoad) {
+            showLoadingViewDialog()
+            newsApiDetailsList?.clear()
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = newsApiData.getRelevantNews(query)?.execute()
+                val response = newsApiData.getRelevantNews(query, pageSize, page)?.execute()
                 withContext(Dispatchers.Main) {
                     if (response?.isSuccessful == true) {
+                        val startPosition = newsApiDetailsList?.size ?: 0
                         val newsResponse = response.body()
-                        newsApiDetailsList = newsResponse?.articles
-                        newsDetailsAdapter.updateNewsDetailsList(newsApiDetailsList)
+                        newsResponse?.articles?.forEach { item ->
+                            newsApiDetailsList?.add(item)
+                        }
+                        val newsItemSize = newsApiDetailsList?.size ?: 0
+                        newsDetailsAdapter.updateSearchNewsDetailsList(newsApiDetailsList, startPosition, newsItemSize)
                         dismissLoadingViewDialog()
                     }
                     else {

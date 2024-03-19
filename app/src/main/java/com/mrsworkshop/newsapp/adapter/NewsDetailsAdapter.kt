@@ -78,6 +78,11 @@ class NewsDetailsAdapter(
         }
     }
 
+    fun updateSearchNewsDetailsList(updatedNewsList : MutableList<ArticlesDetails>?, startPosition : Int, newItemSize : Int) {
+        newsDetailsList = updatedNewsList
+        notifyItemRangeInserted(startPosition, newItemSize)
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     fun updateNewsDetailsList(updatedNewsList : MutableList<ArticlesDetails>?) {
         newsDetailsList = updatedNewsList

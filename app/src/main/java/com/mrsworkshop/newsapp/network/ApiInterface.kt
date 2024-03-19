@@ -16,6 +16,8 @@ interface ApiInterface {
     @GET("everything")
     fun getRelevantNews(
         @Query("q") query: String?,
+        @Query("pageSize") pageSize : Int?,
+        @Query("page") page : Int?,
         @Query("apiKey") apiKey: String?
     ): Call<NewsApiResponseDTO>?
 }

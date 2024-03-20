@@ -2,9 +2,9 @@ package com.mrsworkshop.newsapp.core
 
 object CoreEnum {
 
-    enum class AppLanguageType(val languageType: String) {
-        ENGLISH("en"),
-        CHINESE("zh")
+    enum class AppLanguageType(val languageType: String, val languageSpeech : String) {
+        ENGLISH("en", "en-US"),
+        CHINESE("zh", "zh-CN")
     }
 
     enum class CountryCategory(val country: String, val index : Int) {

@@ -1,15 +1,23 @@
 package com.mrsworkshop.newsapp.fragment
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -18,9 +26,11 @@ import com.mrsworkshop.newsapp.R
 import com.mrsworkshop.newsapp.activity.NewsDetailsActivity
 import com.mrsworkshop.newsapp.adapter.NewsDetailsAdapter
 import com.mrsworkshop.newsapp.apidata.response.ArticlesDetails
+import com.mrsworkshop.newsapp.core.CoreEnum
 import com.mrsworkshop.newsapp.core.PreferenceCache
 import com.mrsworkshop.newsapp.databinding.FragmentSearchNewsBinding
 import com.mrsworkshop.newsapp.utils.Constant
+import com.mrsworkshop.newsapp.utils.Constant.REQUEST_CODE_SPEECH_INPUT
 import com.mrsworkshop.newsapp.viewModel.NewsApiData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -145,7 +155,9 @@ class SearchHistoryFragment : BaseFragment(), NewsDetailsAdapter.NewsDetailsInte
                 if ((searchHistoryList?.size ?: 0) >= 10) {
                     searchHistoryList?.removeAt(0)
                 }
-                searchHistoryList?.add(searchText)
+                if (searchHistoryList?.contains(searchText) == false) {
+                    searchHistoryList?.add(searchText)
+                }
                 PreferenceCache(requireContext()).savedSearchHistory(Gson().toJson(searchHistoryList))
                 loadSearchHistory()
 
@@ -158,6 +170,15 @@ class SearchHistoryFragment : BaseFragment(), NewsDetailsAdapter.NewsDetailsInte
             searchHistoryList?.clear()
             PreferenceCache(requireContext()).savedSearchHistory(Gson().toJson(searchHistoryList))
             loadSearchHistory()
+        }
+
+        binding.imgSpeechToText.setOnClickListener {
+            if (PreferenceCache(requireContext()).getSelectedLanguage() == CoreEnum.AppLanguageType.ENGLISH.languageType) {
+                startSpeechRecognition(CoreEnum.AppLanguageType.ENGLISH.languageSpeech)
+            }
+            else {
+                startSpeechRecognition(CoreEnum.AppLanguageType.CHINESE.languageSpeech)
+            }
         }
     }
 
@@ -197,6 +218,45 @@ class SearchHistoryFragment : BaseFragment(), NewsDetailsAdapter.NewsDetailsInte
                 binding.layoutSearchHistory.addView(searchHistoryLayoutView)
             }
         }
+    }
+
+    private val speechRecognitionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val resultText = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)
+            if (resultText != null) {
+                binding.etSearchEditText.clearFocus()
+                dismissKeyBoard()
+
+                binding.etSearchEditText.setText(resultText)
+                val searchText = binding.etSearchEditText.text.toString().trim()
+                if (searchText.isNotEmpty()) {
+                    if ((searchHistoryList?.size ?: 0) >= 10) {
+                        searchHistoryList?.removeAt(0)
+                    }
+                    if (searchHistoryList?.contains(searchText) == false) {
+                        searchHistoryList?.add(searchText)
+                    }
+                    PreferenceCache(requireContext()).savedSearchHistory(Gson().toJson(searchHistoryList))
+                    loadSearchHistory()
+
+                    page = 1
+                    getRelevantNews(searchText, pageSize ?: 0, page ?: 0, false)
+                }
+
+                binding.txtSearchText.visibility = View.GONE
+                binding.layoutSearchHistory.visibility = View.GONE
+                binding.layoutSearchHistoryWrapper.visibility = View.GONE
+                binding.recyclerviewSearchResults.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun startSpeechRecognition(language: String) {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, language)
+        }
+        speechRecognitionLauncher.launch(intent)
     }
 
     /**

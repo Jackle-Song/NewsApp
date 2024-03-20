@@ -9,4 +9,7 @@ object Constant {
 
     //web view intent
     const val INTENT_WEB_VIEW_URL = "webViewUrl"
+
+    //Request Code
+    const val REQUEST_CODE_SPEECH_INPUT = 111
 }
